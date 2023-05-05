@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Modal</title>
+    <style>
+        body {
+            overscroll-behavior-y: none;
+            font-family: system-ui;
+            padding: 2em;
+            background-color: #f4f4f4;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 66%;
+            transform: translate(-50%, -50%);
+            padding: 1em 2em 2em 2em;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-button {
+            background: transparent;
+            border: none;
+            padding: 1em;
+            font-size: 1em;
+            position: absolute;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="modal" class="modal" style="display: none;">
+        <button id="close-button" class="close-button" aria-label="close" tabindex="0">✕</button>
+        <div>
+            <h1>Notice</h1>
+            Lorem ipsum dolor sit amet.
+        </div>
+    </div>
+    <script>
+        var cookieName = 'google_modal';
+        var previewMode = true;
+
+        //Create cookies function
+        function createCookie(name, value, days) {
+            var date, expires;
+            if (days) {
+                date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toGMTString();
+            }
+            else {
+                expires = "";
+            }
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+
+        //Variable to add the cookie name to the test url
+        var testingUrl = new RegExp(cookieName);
+
+        //Show the lightbox in preview mode
+        if (previewMode === true && window.location.href.match(testingUrl)) {
+            document.getElementById('modal').style.display = 'block'
+        }
+
+        //Listeners
+        //Remove the lightbox when escape key is press
+        document.addEventListener('keyup', function (e) {
+            if (e.which == 27) {
+                document.querySelector('.rkd-test-lightbox-overlay').style.display = 'none';
+                document.querySelector('.rkd-test-popup').style.display = 'none';
+            }
+        });
+
+        document.getElementById("close-button").onclick = () => {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

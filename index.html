@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RKD Old Lightbox</title>
+</head>
+
+<body>
+    <style type="text/css">
+        .rkd-test-lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 111110100;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .9);
+        }
+
+        .rkd-test-popup {
+            margin: 0 auto;
+            position: fixed;
+            top: 10%;
+            left: .1%;
+            right: .1%;
+            z-index: 111110110;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .rkd-test-content {
+            background-color: #999;
+        }
+
+        .rkd-test-desk-content {
+            width: 100%;
+            box-shadow: 0px 0px 30px #000000;
+        }
+
+        .rkd-test-popup .rkd-test-close-button {
+            margin: 0;
+            opacity: 1;
+            position: absolute;
+            right: 0px;
+            top: -30px;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 27px;
+            font-weight: bold;
+            text-decoration: none;
+            font-family: Tahoma, Verdana, sans-serif;
+            display: block;
+            width: 28px;
+            height: 28px;
+            color: #fff;
+        }
+
+        a.rkd-test-donate-now {
+            border-bottom: none !important;
+        }
+
+        @media(max-width: 600px) {
+
+            .rkd-test-popup,
+            .rkd-test-lightbox-overlay,
+            .rkd-test-desk-content,
+            .rkd-test-close-button {
+                display: none !important;
+            }
+        }
+    </style>
+    <script type="text/javascript">
+        (function () {
+            //replace CLIENT and TITLE in lowercase
+            var cookieName = 'lb_rkd_old';
+            var previewMode = true;
+
+            //Create cookies function
+            function createCookie(name, value, days) {
+                var date, expires;
+                if (days) {
+                    date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toGMTString();
+                }
+                else {
+                    expires = "";
+                }
+                document.cookie = name + "=" + value + expires + "; path=/";
+            }
+
+            //Variable to add the cookie name to the test url
+            var testingUrl = new RegExp(cookieName);
+
+            //Show the lightbox in preview mode
+            if (previewMode === true && window.location.href.match(testingUrl)) {
+                showLightBox();
+            }
+
+            //Lightbox in live mode
+            if (previewMode == false) {
+                //review if the LB was displayed before
+                if (document.cookie.indexOf(cookieName) !== -1) {
+                    return;
+                }
+                //create the cookie and show the lightbox
+                createCookie(cookieName, 'true', 1);
+                showLightBox();
+            }
+
+            //Remove the lightbox when escape key is press
+            document.addEventListener('keyup', function (e) {
+                if (e.which == 27) {
+                    document.querySelector('.rkd-test-lightbox-overlay').style.display = 'none';
+                    document.querySelector('.rkd-test-popup').style.display = 'none';
+                }
+            });
+
+            //Function to show the lightbox
+            function showLightBox() {
+                var linkURL = "#",
+                    image = "https://s3.amazonaws.com/xtemp19.lb/placeholder-image.png";
+
+                var popup = '<div class="rkd-test-popup"><div class="rkd-test-content"><a class="rkd-test-donate-now" href="' + linkURL + '" ><img src="' + image + '" class="rkd-test-desk-content" /></a></div><div class="rkd-test-closing-footer"><a href="#" class="rkd-test-close-button">&times;</a></div></div><div class="rkd-test-lightbox-overlay"></div>';
+
+                //Create a new holder div for the lightbox
+                var i = document.createElement('DIV');
+                i.id = 'lightboxAppend';
+
+                //Append to the body
+                document.getElementsByTagName('body')[0].appendChild(i);
+
+                //Set the html of the new div to be our lightbox
+                i.innerHTML = popup;
+
+                //Grab the dark overlay and lightbox from the dom
+                var overlay = document.querySelector('.rkd-test-lightbox-overlay');
+                var popupLightbox = document.querySelector('.rkd-test-popup');
+
+                //Show the lightbox
+                overlay.style.display = 'block';
+                popupLightbox.style.display = 'block';
+
+                //Remove the lightbox when the close button is clicked
+                document.querySelector('.rkd-test-popup .rkd-test-close-button').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    overlay.style.display = 'none';
+                    popupLightbox.style.display = 'none';
+                });
+
+                //Remove the lightbox when the overlay is clicked
+                overlay.addEventListener('click', function () {
+                    overlay.style.display = 'none';
+                    popupLightbox.style.display = 'none';
+                });
+
+                //Push Data Event to Google Analytics on Click 
+                if (document.querySelector('.rkd-test-popup .rkd-test-donate-now')) {
+
+                    var allDonateButtons = document.body.querySelectorAll('.rkd-test-popup .rkd-test-donate-now');
+
+                    for (var x = 0; x < allDonateButtons.length; x++) {
+                        allDonateButtons[x].addEventListener('click', function () {
+                            window.dataLayer.push({
+                                event: "dynamicEvent",
+                                dynamicCategory: 'lightbox',
+                                dynamicAction: 'click',
+                                dynamicLabel: cookieName
+                            });
+                        });
+                    }
+                }
+
+                //Push Data Event to Google Analytics on Render
+                window.dataLayer.push({
+                    event: "dynamicEvent",
+                    dynamicCategory: 'lightbox',
+                    dynamicAction: 'render',
+                    dynamicLabel: cookieName
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

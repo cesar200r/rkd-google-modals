@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RKD Lightbox Builder</title>
+</head>
+
+<body>
+    <h1>Possible improvements</h1>
+    <ul>
+        <li>Always load the LB Builder script using either <code>preconnect</code> or <code>dns-prefetch</code> </li>
+    </ul>
+    <script type="text/javascript" src="https://d171gvrnoh6kyc.cloudfront.net/lightbox.min.js"></script>
+    <script>
+        (function () {
+            var lightboxConfig = {
+                uniqueClassName: 'rkd-lb-builder',
+                cookieLifetime: 24,
+                cookieName: 'rkd-lb-builder',
+                previewMode: true,
+                image: 'https://s3.amazonaws.com/xtemp19.lb/placeholder-image.png',
+                mobileImage: 'https://s3.amazonaws.com/xtemp19.lb/placeholder-image.png',
+                donateLink: '#',
+                showOnMobile: true,
+                imageAltText: 'Test alt text',
+                type: 'standard',
+            }
+            lightboxInit(lightboxConfig);
+        })();
+    </script>
+    <style>
+        .rkd-desk-content {
+            background-color: #999;
+        }
+    </style>
+</body>
+
+</html>
